@@ -21,8 +21,8 @@ let win
 const createWindow = () => {
     nativeTheme.themeSource = 'light'
     win = new BrowserWindow({
-        width: 1080,
-        height: 800,
+        width: 900,
+        height: 700,
 
         webPreferences: {
             preload: path.join(__dirname, './preload.js')
@@ -74,7 +74,7 @@ function clientWindow() {
     if (main) {
         client = new BrowserWindow({
             width: 1080,
-            height: 800,
+            height: 900,
             //autoHideMenuBar: true,
             //resizable: false,
             parent: main,
