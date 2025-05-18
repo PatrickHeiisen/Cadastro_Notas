@@ -28,4 +28,6 @@ contextBridge.exposeInMainWorld('api', {
     limparForm: (callback) => ipcRenderer.on('limpar-form', callback),
     updateClient: (client) => ipcRenderer.send('update-client', client),
     // Cadastro Nota
+    notaWindow: () => ipcRenderer.send('nota-window'),
+    createNota: (newNota) => ipcRenderer.send('create-nota', newNota)
 })

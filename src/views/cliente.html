@@ -7,7 +7,7 @@
     <!--Impedir a execução de scripts externos-->
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
     <!--Título da janela-->
-    <title>Cadastro de clientes</title>
+    <title>Cadastro de empresas</title>
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../public/css/style.css">
 </head>
@@ -16,10 +16,10 @@
     <section class="containercli" id="inputForm">
         <!-- FORMULARIO -->
         <form id="formCliente" class="row g-3">
-            <h1 class="text-center mb-4">CADASTRO DE CLIENTE</h1>
+            <h1 class="text-center mb-4">CADASTRAR EMPRESA</h1>
             <div class="row mb-4">
                 <div class="col-md-9">
-                    <input type="text" id="searchCliente" class="form-control" placeholder="Buscar Cliente">
+                    <input type="text" id="searchCliente" class="form-control" placeholder="Buscar Empresa">
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-primary w-200" onclick="searchName()">Buscar</button>
@@ -37,8 +37,8 @@
                     </div>
                     <!-- CPF -->
                     <div class="col-md-4">
-                        <label for="cpf" class="form-label">CPF:</label>
-                        <input type="text" id="inputCpf" class="form-control" required onblur="validarCPF()">
+                        <label for="cpf" class="form-label">CNPJ:</label>
+                        <input type="text" id="inputCpf" class="form-control" required onblur="validarCNPJ()">
                         <div id="cpfErro" class="text-danger mt-1" style="display: none;">CPF inválido</div>
                     </div>
                 </div>
@@ -48,14 +48,8 @@
                 <div class="row">
                     <!-- Sexo -->
                     <div class="col-md-4">
-                        <label for="sexo" class="form-label">Sexo:</label>
-                        <select id="inputSexo" class="form-select" required>
-                            <option value="">Selecione</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Feminino">Feminino</option>
-                            <option value="Outro">Outro</option>
-                            <option value="Prefiro não informar">Prefiro não informar</option>
-                        </select>
+                        <label for="sexo" class="form-label">Razão Social:</label>
+                        <input type="text" id="inputSexo" class="form-control" required>
                     </div>
                     <!-- Email -->
                     <div class="col-md-8">
@@ -147,14 +141,14 @@
                 com sucesso!</div>
         </form>
     </section>
-    <footer>
+
+    <footer class="text-center mt-5">
         <p id="dataAtual"></p>
-        <img src="../public/img/dboff.png" alt="ícone banco de dados" id="iconeDB">
+        <img src="../public/img/dboff.png" alt="dbicon" id="statusdb">
     </footer>
 
     <script src="../public/js/bootstrap.min.js"></script>
     <script src="rendererCliente.js"></script>
-
 </body>
 
 </html>

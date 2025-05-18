@@ -7,8 +7,28 @@
 function client() {
     //console.log("teste do botão cliente")
     //uso da api(autorizada no preload.js)
-    api.clientWindow();
+    api.clientWindow()
 }
+
+// Envio de uma mensagem para o main abrir a janela clinte
+function nota() {
+    //console.log("teste do botão cliente")
+    //uso da api(autorizada no preload.js)
+    api.notaWindow()
+}
+
+function obterData() {
+    const data = new Date()
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    }
+    return data.toLocaleDateString('pt-BR', options)
+}
+
+document.getElementById('dataAtual').innerHTML = obterData()
 
 // Troca do ícone do banco de dados (usando a api do preload.js)
 api.dbStatus((event, message) => {

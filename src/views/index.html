@@ -15,10 +15,22 @@
 </head>
 
 <body>
-    <div class="container button">
-        <img src="../public/img/clientes.png" alt="clientes" title="Cadastro de clientes" onclick="client()">       
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <!-- Bloco 1 -->
+            <div class="col-md-3 text-center mb-4">
+                <img src="../public/img/empresa.png" alt="clientes" title="Cadastro de empresas" onclick="client()">
+                <p>Cadastrar Empresa</p>
+            </div>
+            <!-- Bloco 2 -->
+            <div class="col-md-3 text-center mb-4">
+                <img src="../public/img/cadastro.png" alt="clientes" title="Cadastro de clientes" onclick="nota()">
+                <p>Cadastrar Nota</p>
+            </div>
+        </div>
     </div>
-    <footer>
+
+    <footer class="text-center mt-5">
         <p id="dataAtual"></p>
         <img src="../public/img/dboff.png" alt="dbicon" id="statusdb">
     </footer>

@@ -18,47 +18,54 @@ function resetForm() {
     document.getElementById("mensagemSucesso").style.display = "none";
 }
 
-// Validação de CPF
-function validarCPF() {
-    let cpfInput = document.getElementById('inputCpf');
-    let cpf = cpfInput.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+// Validação de CNPJ
+function validarCNPJ() {
+    let cnpjInput = document.getElementById('inputCpf');
+    let cnpj = cnpjInput.value.replace(/\D/g, ''); // Remove caracteres não numéricos
 
     // Resetando o estilo
-    cpfInput.style.border = "";
+    cnpjInput.style.border = "";
 
-    // Verifica se o CPF é composto por 11 dígitos e não é uma sequência repetida
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
-        cpfInput.style.border = "2px solid red";
+    // CNPJ deve ter 14 dígitos
+    if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) {
+        cnpjInput.style.border = "2px solid red";
         return;
     }
 
-    let soma = 0, resto;
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
 
-    // Validação do primeiro dígito verificador
-    for (let i = 1; i <= 9; i++) {
-        soma += parseInt(cpf[i - 1]) * (11 - i);
+    // Validação do primeiro dígito
+    for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
     }
-    resto = (soma * 10) % 11;
-    if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf[9])) {
-        cpfInput.style.border = "2px solid red";
+    let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos.charAt(0))) {
+        cnpjInput.style.border = "2px solid red";
         return;
     }
 
-    // Validação do segundo dígito verificador
+    // Validação do segundo dígito
+    tamanho += 1;
+    numeros = cnpj.substring(0, tamanho);
     soma = 0;
-    for (let i = 1; i <= 10; i++) {
-        soma += parseInt(cpf[i - 1]) * (12 - i);
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
     }
-    resto = (soma * 10) % 11;
-    if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf[10])) {
-        cpfInput.style.border = "2px solid red";
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos.charAt(1))) {
+        cnpjInput.style.border = "2px solid red";
         return;
     }
 
-    // CPF válido, remove borda vermelha
-    cpfInput.style.border = "";
+    // CNPJ válido, remove borda vermelha
+    cnpjInput.style.border = "";
 }
 
 // Validação de e-mail
@@ -111,12 +118,14 @@ function obterData() {
 
 document.getElementById('dataAtual').innerHTML = obterData()
 
+// Troca do ícone do banco de dados (usando a api do preload.js)
 api.dbStatus((event, message) => {
+    //teste do recebimento da mensagem do main
     console.log(message)
     if (message === "conectado") {
-        document.getElementById('iconeDB').src = "../public/img/dbon.png"
+        document.getElementById('statusdb').src = "../public/img/dbon.png"
     } else {
-        document.getElementById('iconeDB').src = "../public/img/dboff.png"
+        document.getElementById('statusdb').src = "../public/img/dboff.png"
     }
 })
 //=============================================================================

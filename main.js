@@ -8,7 +8,7 @@ const path = require('node:path')
 
 const { conectar, desconectar } = require('./database.js')
 
-const notaModel = require('./src/models/nota.js')
+const notaModel = require('./src/models/Nota.js')
 
 const clienteModel = require('./src/models/Clientes.js')
 
@@ -21,176 +21,208 @@ const { jspdf, default: jsPDF } = require('jspdf')
 //Janela Principal
 let win
 const createWindow = () => {
-    nativeTheme.themeSource = 'light'
-    win = new BrowserWindow({
-        width: 900,
-        height: 700,
+  nativeTheme.themeSource = 'light'
+  win = new BrowserWindow({
+    width: 900,
+    height: 700,
 
-        webPreferences: {
-            preload: path.join(__dirname, './preload.js')
-        }
-    })
+    webPreferences: {
+      preload: path.join(__dirname, './preload.js')
+    }
+  })
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(templete))
+  Menu.setApplicationMenu(Menu.buildFromTemplate(templete))
 
-    win.loadFile('./src/views/index.html')
+  win.loadFile('./src/views/index.html')
 }
 
 // Janela Sobre
 let about
 function aboutWindow() {
-    nativeTheme.themeSource = 'light'
+  nativeTheme.themeSource = 'light'
 
-    const mainWindow = BrowserWindow.getFocusedWindow()
+  const mainWindow = BrowserWindow.getFocusedWindow()
 
-    if (mainWindow) {
-        about = new BrowserWindow({
-            width: 415,
-            height: 350,
-            autoHideMenuBar: true,
-            resizable: false,
-            minimizable: false,
-            parent: mainWindow,
-            modal: true,
-            webPreferences: {
-                preload: path.join(__dirname, './preload.js')
-            }
-        })
+  if (mainWindow) {
+    about = new BrowserWindow({
+      width: 415,
+      height: 350,
+      autoHideMenuBar: true,
+      resizable: false,
+      minimizable: false,
+      parent: mainWindow,
+      modal: true,
+      webPreferences: {
+        preload: path.join(__dirname, './preload.js')
+      }
+    })
+  }
+
+  about.loadFile('./src/views/sobre.html')
+
+  ipcMain.on('about-exit', () => {
+    if (about && !about.isDestroyed()) {
+      about.close()
     }
 
-    about.loadFile('./src/views/sobre.html')
-
-    ipcMain.on('about-exit', () => {
-        if (about && !about.isDestroyed()) {
-            about.close()
-        }
-
-    })
+  })
 }
 
-// Janela Cadastro cliente
+// Janela Cadastro de empresa
 let client
 function clientWindow() {
-    nativeTheme.themeSource = 'light'
-    const main = BrowserWindow.getFocusedWindow()
-    if (main) {
-        client = new BrowserWindow({
-            width: 1080,
-            height: 900,
-            //autoHideMenuBar: true,
-            //resizable: false,
-            parent: main,
-            modal: true,
-            //ativação do preload.js
-            webPreferences: {
-                preload: path.join(__dirname, 'preload.js')
-            }
-        })
-    }
-    client.loadFile('./src/views/cliente.html')
-    client.center() //iniciar no centro da tela   
+  nativeTheme.themeSource = 'light'
+  const main = BrowserWindow.getFocusedWindow()
+  if (main) {
+    client = new BrowserWindow({
+      width: 1080,
+      height: 900,
+      //autoHideMenuBar: true,
+      //resizable: false,
+      parent: main,
+      modal: true,
+      //ativação do preload.js
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js')
+      }
+    })
+  }
+  client.loadFile('./src/views/cliente.html')
+  client.center() //iniciar no centro da tela   
+}
+
+// Janela Cadastro de Notas
+let nota
+function notaWindow() {
+  nativeTheme.themeSource = 'light'
+  const main = BrowserWindow.getFocusedWindow()
+  if (main) {
+    client = new BrowserWindow({
+      width: 1080,
+      height: 900,
+      //autoHideMenuBar: true,
+      //resizable: false,
+      parent: main,
+      modal: true,
+      //ativação do preload.js
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js')
+      }
+    })
+  }
+  client.loadFile('./src/views/nota.html')
+  client.center() //iniciar no centro da tela   
 }
 
 app.whenReady().then(() => {
-    createWindow()
+  createWindow()
 
-    ipcMain.on('db-connect', async (event) => {
-        const conectado = await conectar()
-        if (conectado) {
-            setTimeout(() => {
-                event.reply('db-status', "conectado")
-            }, 500)
-        }
-    })
+  ipcMain.on('db-connect', async (event) => {
+    const conectado = await conectar()
+    if (conectado) {
+      setTimeout(() => {
+        event.reply('db-status', "conectado")
+      }, 500)
+    }
+  })
 
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow()
-        }
-    })
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
 })
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
 
 app.on('before-quit', async () => {
-    await desconectar()
+  await desconectar()
 })
 
 app.commandLine.appendSwitch('log-level', '3')
 
 const templete = [
-    {
-        label: 'Cadastro',
-        submenu: [
-            {
-                label: 'Sair',
-                accelerator: 'Esc'
-            }
-        ]
-    },
-    {
-        label: 'Relatórios',
-        submenu: [
-            {
-                label: 'Notas',
-                click: () => relatorioNotas()
-            }
-        ]
-    },
-    {
-        label: 'Ferramentas',
-        submenu: [
-            {
-                label: 'Ampliar',
-                role: 'zoomIn',
-                accelerator: 'Ctrl+='
-            },
-            {
-                label: 'Reduzir',
-                role: 'zoomOut',
-                accelerator: 'Ctrl+-'
-            },
-            {
-                label: 'Tamanho padrão',
-                role: 'resetZoom',
-                accelerator: 'Ctrl+0'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                label: 'Recarregar',
-                role: 'reload'
-            },
-            {
-                label: 'DevTools',
-                role: 'toggleDevTools',
-                accelerator: 'Ctrl+Shift'
-            }
-        ]
-    },
-    {
-        label: 'Ajuda',
-        submenu: [
-            {
-                label: 'Repositório',
-                click: () => shell.openExternal('https://github.com/PatrickHeiisen/Cadastro_Nota.git')
-            },
-            {
-                label: 'Sobre',
-                click: () => aboutWindow()
-            }
-        ]
-    }
+  {
+    label: 'Cadastro',
+    submenu: [
+      {
+        label: 'Sair',
+        accelerator: 'Esc'
+      }
+    ]
+  },
+  {
+    label: 'Relatórios',
+    submenu: [
+      {
+        label: 'Clientes',
+        click: () => relatorioClientes()
+      },
+      {
+        label: 'Notas',
+        click: () => relatorioNotas()
+      }
+    ]
+  },
+  {
+    label: 'Ferramentas',
+    submenu: [
+      {
+        label: 'Ampliar',
+        role: 'zoomIn',
+        accelerator: 'Ctrl+='
+      },
+      {
+        label: 'Reduzir',
+        role: 'zoomOut',
+        accelerator: 'Ctrl+-'
+      },
+      {
+        label: 'Tamanho padrão',
+        role: 'resetZoom',
+        accelerator: 'Ctrl+0'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Recarregar',
+        role: 'reload'
+      },
+      {
+        label: 'DevTools',
+        role: 'toggleDevTools',
+        accelerator: 'Ctrl+Shift'
+      }
+    ]
+  },
+  {
+    label: 'Ajuda',
+    submenu: [
+      {
+        label: 'Repositório',
+        click: () => shell.openExternal('https://github.com/PatrickHeiisen/Cadastro_Nota.git')
+      },
+      {
+        label: 'Sobre',
+        click: () => aboutWindow()
+      }
+    ]
+  }
 ]
 
 // recebimento dos pedidos do renderizador para abertura de janelas (botões) autorizado no preload.js
 ipcMain.on('client-window', () => {
-    clientWindow()
+  clientWindow()
+})
+
+// recebimento dos pedidos do renderizador para abertura de janelas (botões) autorizado no preload.js
+ipcMain.on('nota-window', () => {
+  notaWindow()
 })
 
 //*********** CADASTRO CLIENTE ***************/
@@ -218,7 +250,7 @@ ipcMain.on('create-cliente', async (event, newCliente) => {
     dialog.showMessageBox({
       type: 'info',
       title: "Aviso",
-      message: "Cliente adicionado com sucesso.",
+      message: "Empresa adicionado com sucesso.",
       buttons: ['OK']
     }).then((result) => {
       if (result.response === 0) {
@@ -232,7 +264,7 @@ ipcMain.on('create-cliente', async (event, newCliente) => {
       dialog.showMessageBox({
         type: 'error',
         title: "Atenção!!!",
-        message: "CPF já cadastrado.\nVerifique o número digitado",
+        message: "Cnpj já cadastrado.\nVerifique o número digitado",
         buttons: ['OK']
       }).then((result) => {
         // Se o botão OK for pressionado
@@ -315,7 +347,7 @@ async function relatorioClientes() {
     //============================================================================
     // Definir o caminho do arquivo temporário e nome do arquivo com extenção .pdf
     const tempDir = app.getPath('temp')
-    const filePath = path.join(tempDir, 'clientes.pdf')
+    const filePath = path.join(tempDir, 'empresa.pdf')
     // salvar temporariamente o arquivo
     doc.save(filePath)
     // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
@@ -353,7 +385,7 @@ ipcMain.on('search-name', async (event, cliName) => {
       dialog.showMessageBox({
         type: 'warning',
         title: 'Aviso',
-        message: 'Cliente não cadastrado. \nDeseja cadastrar este cliente',
+        message: 'Empresa não cadastrada. \nDeseja cadastrar esta empresa',
         defaultId: 0,
         buttons: ['Sim', 'Não']
       }).then((result) => {
@@ -382,7 +414,7 @@ ipcMain.on('validate-cpf', () => {
   dialog.showMessageBox({
     type: 'warning',
     title: 'atenção',
-    message: 'Preencher o campo de Cpf',
+    message: 'Preencher o campo de Cnpj',
     buttons: ['OK']
   })
 })
@@ -403,7 +435,7 @@ ipcMain.on('search-cpf', async (event, cliCpf) => {
       dialog.showMessageBox({
         type: 'warning',
         title: 'Aviso',
-        message: 'CPF não cadastrado. \nDeseja cadastrar este cliente',
+        message: 'Cnpj não cadastrado. \nDeseja cadastrar esta empresa',
         defaultId: 0,
         buttons: ['Sim', 'Não']
       }).then((result) => {
@@ -432,7 +464,7 @@ ipcMain.on('delete-cli', async (event, id) => {
   const { response } = await dialog.showMessageBox(win, {
     type: 'warning',
     title: "Atenção!",
-    message: "Tem certeza que deseja excluir este cliente?\nEsta ação não poderá ser desfeita.",
+    message: "Tem certeza que deseja excluir esta empresa?\nEsta ação não poderá ser desfeita.",
     buttons: ['Cancelar', 'Excluir'] // [0,1]
   });
   if (response === 1) {
@@ -476,7 +508,7 @@ ipcMain.on('update-client', async (event, client) => {
     dialog.showMessageBox({
       type: 'info',
       title: "Aviso",
-      message: "Dados do cliente alterados com sucesso.",
+      message: "Dados da empresa alterados com sucesso.",
       buttons: ['OK']
     }).then((result) => {
       if (result.response === 0) {
@@ -489,7 +521,7 @@ ipcMain.on('update-client', async (event, client) => {
       dialog.showMessageBox({
         type: 'error',
         title: "Atenção!!!",
-        message: "CPF já cadastrado.\nVerifique o número digitado",
+        message: "Cnpj já cadastrado.\nVerifique o número digitado",
         buttons: ['OK']
       }).then((result) => {
         if (result.response === 0) {
@@ -504,4 +536,54 @@ ipcMain.on('update-client', async (event, client) => {
 // Fim Editar Cliente ===============================================================
 //===================================================================================
 
-//************* CADASTRO NOTA FISCAL ************/
+//****************************** CADASTRO NOTA FISCAL ******************************/
+//= CRUD CREATE - CADASTRAR NOTA ==================================================
+ipcMain.on('create-nota', async (event, newNota) => {
+    console.log(newNota)
+    try {
+        const newNotas = notaModel({
+            nota: newNota.notaCad,
+            empresa: newNota.empresaCad,
+            cnpj: newNota.cnpjCad,
+            data: newNota.dataCad,
+            valor: newNota.valorCad,
+            item: newNota.itemCad,
+            quantidade: newNota.quantidadeCad,
+            unitario: newNota.unitarioCad
+        })
+
+        await newNotas.save()
+
+        dialog.showMessageBox({
+            type: 'info',
+            title: "Aviso",
+            message: "Nota adicionado com sucesso.",
+            buttons: ['OK']
+        }).then((result) => {
+            if (result.response === 0) {
+                event.reply('reset-form')
+            }
+        })
+
+    } catch (error) {
+        // Tratamento da excessão "CNPJ duplicado"
+        if (error.code === 11000) {
+            dialog.showMessageBox({
+                type: 'error',
+                title: "Atenção!!!",
+                message: "CNPJ já cadastrado.\nVerifique o número digitado",
+                buttons: ['OK']
+            }).then((result) => {
+                // Se o botão OK for pressionado
+                if (result.response === 0) {
+                    // Encontrar o campo de CPF
+                    event.reply('reset-cnpj')
+                }
+            })
+        } else {
+            console.log(error);
+        }
+    }
+})
+//===================================================================================
+

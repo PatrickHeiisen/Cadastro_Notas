@@ -1,10 +1,11 @@
 @charset "utf-8";
 
-html,
-body {
-    height: 100%;
+html, body {
     margin: 0;
     padding: 0;
+    overflow: hidden; /* impede rolagem */
+    width: auto;
+    height: auto;
 }
 
 .containercli {
@@ -33,13 +34,18 @@ footer {
     background-color: #174feb;
     display: flex;
     justify-content: space-between;
-    display: fixed;
+    align-items: center;
     padding: 5px;
     height: 30px;
     position: fixed;
     bottom: 0;
     width: 100%;
     color: #fff;
+}
+
+footer p {
+    margin: 0;
+    font-weight: bold;
 }
 
 .botao-container {
