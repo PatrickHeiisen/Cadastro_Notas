@@ -9,7 +9,7 @@ html, body {
 }
 
 .containercli {
-    background-color: #c8c8c8;
+    background-color: #cae7f8;
     min-height: 100vh;
     /* Faz a seção ocupar 100% da altura da tela */
     display: flex;

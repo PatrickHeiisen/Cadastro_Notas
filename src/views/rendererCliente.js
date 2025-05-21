@@ -144,14 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // Captura de dados
 let formCli = document.getElementById('formCliente')
 let nome = document.getElementById('inputNome')
-let sexo = document.getElementById('inputSexo')
-let cpf = document.getElementById('inputCpf')
+let cnpj = document.getElementById('inputCpf')
+let social = document.getElementById('inputSocial')
 let email = document.getElementById('inputEmail')
+let site = document.getElementById('inputSite')
 let tel = document.getElementById('inputTelefone')
 let cep = document.getElementById('inputCep')
 let logradouro = document.getElementById('inputLogradouro')
 let numero = document.getElementById('inputNumero')
-let complemento = document.getElementById('inputComplemento')
 let bairro = document.getElementById('inputBairro')
 let cidade = document.getElementById('inputCidade')
 let uf = document.getElementById('inputUf')
@@ -183,14 +183,14 @@ formCli.addEventListener('submit', async (event) => {
         // cadastrar um novo cliente
         const newCliente = {
             nomeCli: nome.value,
-            sexoCli: sexo.value,
-            cpfCli: cpf.value,
+            cnpjCli: cnpj.value,
+            socialCli: social.value,
             emailCli: email.value,
+            siteCli: site.value,
             telCli: tel.value,
             cepCli: cep.value,
             logradouroCli: logradouro.value,
             numeroCli: numero.value,
-            complementoCli: complemento.value,
             bairroCli: bairro.value,
             cidadeCli: cidade.value,
             ufCli: uf.value
@@ -205,14 +205,14 @@ formCli.addEventListener('submit', async (event) => {
         const client = {
             idCli: idClient.value,
             nomeCli: nome.value,
-            sexoCli: sexo.value,
-            cpfCli: cpf.value,
+            cnpjCli: cnpj.value,
+            socialCli: social.value,
             emailCli: email.value,
+            siteCli: site.value,
             telCli: tel.value,
             cepCli: cep.value,
             logradouroCli: logradouro.value,
             numeroCli: numero.value,
-            complementoCli: complemento.value,
             bairroCli: bairro.value,
             cidadeCli: cidade.value,
             ufCli: uf.value
@@ -295,14 +295,14 @@ function searchName() {
         arrayClient.forEach((c) => {
             idClient.value = c._id
             nome.value = c.nome
-            sexo.value = c.sexo
-            cpf.value = c.cpf
+            cnpj.value = c.cnpj
+            social.value = c.social
             email.value = c.email
+            site.value = c.site
             tel.value = c.telefone
             cep.value = c.cep
             logradouro.value = c.logradouro
             numero.value = c.numero
-            complemento.value = c.complemento
             bairro.value = c.bairro
             cidade.value = c.cidade
             uf.value = c.uf

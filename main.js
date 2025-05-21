@@ -76,7 +76,7 @@ function clientWindow() {
   if (main) {
     client = new BrowserWindow({
       width: 1080,
-      height: 900,
+      height: 800,
       //autoHideMenuBar: true,
       //resizable: false,
       parent: main,
@@ -99,7 +99,7 @@ function notaWindow() {
   if (main) {
     client = new BrowserWindow({
       width: 1080,
-      height: 900,
+      height: 800,
       //autoHideMenuBar: true,
       //resizable: false,
       parent: main,
@@ -159,11 +159,7 @@ const templete = [
     label: 'Relatórios',
     submenu: [
       {
-        label: 'Clientes',
-        click: () => relatorioClientes()
-      },
-      {
-        label: 'Notas',
+        label: 'Notas Pendentes',
         click: () => relatorioNotas()
       }
     ]
@@ -232,14 +228,14 @@ ipcMain.on('create-cliente', async (event, newCliente) => {
   try {
     const newClientes = clienteModel({
       nome: newCliente.nomeCli,
-      sexo: newCliente.sexoCli,
-      cpf: newCliente.cpfCli,
+      cnpj: newCliente.cnpjCli,
+      social: newCliente.socialCli,
       email: newCliente.emailCli,
+      site: newCliente.siteCli,
       telefone: newCliente.telCli,
       cep: newCliente.cepCli,
       logradouro: newCliente.logradouroCli,
       numero: newCliente.numeroCli,
-      complemento: newCliente.complementoCli,
       bairro: newCliente.bairroCli,
       cidade: newCliente.cidadeCli,
       uf: newCliente.ufCli,

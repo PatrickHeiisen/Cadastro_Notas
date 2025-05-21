@@ -12,7 +12,6 @@
 
 <body class="bg-light">
     <div class="container py-5">
-        <h2 class="mb-4 text-center fw-bold">Cadastro de Nota Fiscal</h2>
         <form id="formNota">
             <!-- Seção: Dados da Nota Fiscal -->
             <div class="card-body">
@@ -104,17 +103,12 @@
             <!-- Botões de ação -->
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-success" id="btnCreate">ADICIONAR</button>
-                <button type="reset" class="btn btn-warning text-black">LIMPAR</button>
-                <button type="button" class="btn btn-primary text-black" id="btnUpdate">EDITAR</button>
-                <button type="button" class="btn btn-danger text-black" id="btnDelete">EXCLUIR</button>
+                <button type="reset" class="btn btn-warning">LIMPAR</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate">EDITAR</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">EXCLUIR</button>
             </div>
         </form>
     </div>
-
-    <footer class="text-center mt-5">
-        <p id="dataAtual"></p>
-        <img src="../public/img/dboff.png" alt="dbicon" id="statusdb">
-    </footer>
 
     <script src="../public/js/bootstrap.min.js"></script>
     <script src="rendererNota.js"></script>
