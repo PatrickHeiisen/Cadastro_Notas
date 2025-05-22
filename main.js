@@ -238,7 +238,7 @@ ipcMain.on('create-cliente', async (event, newCliente) => {
       numero: newCliente.numeroCli,
       bairro: newCliente.bairroCli,
       cidade: newCliente.cidadeCli,
-      uf: newCliente.ufCli,
+      uf: newCliente.ufCli
     })
 
     await newClientes.save()
@@ -457,12 +457,14 @@ ipcMain.on('search-cpf', async (event, cliCpf) => {
 // Excluir Cliente ================================================================
 ipcMain.on('delete-cli', async (event, id) => {
   console.log(id) // Teste do passo 2 (importante)
+
   const { response } = await dialog.showMessageBox(win, {
     type: 'warning',
     title: "Atenção!",
     message: "Tem certeza que deseja excluir esta empresa?\nEsta ação não poderá ser desfeita.",
     buttons: ['Cancelar', 'Excluir'] // [0,1]
   });
+
   if (response === 1) {
     try {
       const deleteCli = await clienteModel.findByIdAndDelete(id)
@@ -472,6 +474,7 @@ ipcMain.on('delete-cli', async (event, id) => {
 
       // Depois recarrega se precisar
       win.webContents.send('main-reload')
+      
     } catch (error) {
       console.log(error);
     }
@@ -487,14 +490,14 @@ ipcMain.on('update-client', async (event, client) => {
       client.idCli,
       {
         nome: client.nomeCli,
-        sexo: client.sexoCli,
-        cpf: client.cpfCli,
+        cnpj: client.cnpjCli,
+        social: client.socialCli,
         email: client.emailCli,
+        site: client.siteCli,
         telefone: client.telCli,
         cep: client.cepCli,
         logradouro: client.logradouroCli,
         numero: client.numeroCli,
-        complemento: client.complementoCli,
         bairro: client.bairroCli,
         cidade: client.cidadeCli,
         uf: client.ufCli
@@ -535,51 +538,51 @@ ipcMain.on('update-client', async (event, client) => {
 //****************************** CADASTRO NOTA FISCAL ******************************/
 //= CRUD CREATE - CADASTRAR NOTA ==================================================
 ipcMain.on('create-nota', async (event, newNota) => {
-    console.log(newNota)
-    try {
-        const newNotas = notaModel({
-            nota: newNota.notaCad,
-            empresa: newNota.empresaCad,
-            cnpj: newNota.cnpjCad,
-            data: newNota.dataCad,
-            valor: newNota.valorCad,
-            item: newNota.itemCad,
-            quantidade: newNota.quantidadeCad,
-            unitario: newNota.unitarioCad
-        })
+  console.log(newNota)
+  try {
+    const newNotas = notaModel({
+      nota: newNota.notaCad,
+      empresa: newNota.empresaCad,
+      cnpj: newNota.cnpjCad,
+      data: newNota.dataCad,
+      valor: newNota.valorCad,
+      item: newNota.itemCad,
+      quantidade: newNota.quantidadeCad,
+      unitario: newNota.unitarioCad
+    })
 
-        await newNotas.save()
+    await newNotas.save()
 
-        dialog.showMessageBox({
-            type: 'info',
-            title: "Aviso",
-            message: "Nota adicionado com sucesso.",
-            buttons: ['OK']
-        }).then((result) => {
-            if (result.response === 0) {
-                event.reply('reset-form')
-            }
-        })
+    dialog.showMessageBox({
+      type: 'info',
+      title: "Aviso",
+      message: "Nota adicionado com sucesso.",
+      buttons: ['OK']
+    }).then((result) => {
+      if (result.response === 0) {
+        event.reply('reset-form')
+      }
+    })
 
-    } catch (error) {
-        // Tratamento da excessão "CNPJ duplicado"
-        if (error.code === 11000) {
-            dialog.showMessageBox({
-                type: 'error',
-                title: "Atenção!!!",
-                message: "CNPJ já cadastrado.\nVerifique o número digitado",
-                buttons: ['OK']
-            }).then((result) => {
-                // Se o botão OK for pressionado
-                if (result.response === 0) {
-                    // Encontrar o campo de CPF
-                    event.reply('reset-cnpj')
-                }
-            })
-        } else {
-            console.log(error);
+  } catch (error) {
+    // Tratamento da excessão "CNPJ duplicado"
+    if (error.code === 11000) {
+      dialog.showMessageBox({
+        type: 'error',
+        title: "Atenção!!!",
+        message: "CNPJ já cadastrado.\nVerifique o número digitado",
+        buttons: ['OK']
+      }).then((result) => {
+        // Se o botão OK for pressionado
+        if (result.response === 0) {
+          // Encontrar o campo de CPF
+          event.reply('reset-cnpj')
         }
+      })
+    } else {
+      console.log(error);
     }
+  }
 })
 //===================================================================================
 

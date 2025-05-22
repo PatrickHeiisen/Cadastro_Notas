@@ -1,9 +1,11 @@
 @charset "utf-8";
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* impede rolagem */
+    overflow: hidden;
+    /* impede rolagem */
     width: auto;
     height: auto;
 }
@@ -143,13 +145,42 @@ button {
     cursor: pointer;
     margin-left: 10px;
 }
+
 /* Ocultar o id do cliente*/
-#inputIdClient{
+#inputIdClient {
     display: none;
 }
 
 footer p {
     color: #ffffff;
     padding-top: 7px;
-    font-size: 1.2em;    
+    font-size: 1.2em;
+}
+
+.servico {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.servico img {
+    width: 70px;
+    /* ajusta o tamanho da imagem */
+    height: auto;
+    /* mantém a proporção */
+}
+
+.logo {
+    position: fixed;
+    bottom: 50px;
+    left: 900px;
+    z-index: 1000;
+}
+
+.logo img {
+    width: 70px;
+    /* ajusta o tamanho da imagem */
+    height: auto;
+    /* mantém a proporção */
 }

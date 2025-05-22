@@ -104,30 +104,7 @@ function validarFormulario(event) {
         form.reset();
     }
 }
-//===========================================================================
-function obterData() {
-    const data = new Date()
-    const options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    }
-    return data.toLocaleDateString('pt-BR', options)
-}
-
-document.getElementById('dataAtual').innerHTML = obterData()
-
-// Troca do ícone do banco de dados (usando a api do preload.js)
-api.dbStatus((event, message) => {
-    //teste do recebimento da mensagem do main
-    console.log(message)
-    if (message === "conectado") {
-        document.getElementById('statusdb').src = "../public/img/dbon.png"
-    } else {
-        document.getElementById('statusdb').src = "../public/img/dboff.png"
-    }
-})
+//=============================================================================
 //=============================================================================
 // processo de cadastro do cliente
 const foco = document.getElementById('searchCliente')
@@ -163,20 +140,20 @@ let idClient = document.getElementById('inputIdClient')
 formCli.addEventListener('submit', async (event) => {
     // evitar comportamento padrão de recarregar a página
     event.preventDefault()
-    /*console.log(
-        nome.value,
-        sexo.value,
-        cpf.value,
+    console.log(
+        /**nome.value,
+        cnpj.value,
+        social.value,
         email.value,
+        site.value,
         tel.value,
         cep.value,
         logradouro.value,
         numero.value,
-        complemento.value,
         bairro.value,
         cidade.value,
-        uf.value,
-    )*/
+        uf.value,*/
+    )
     // Estrategia para usar o submit para cadastrar um novo cliente ou editar os dados de um cliente existente
     // Verificar se existe o id do cliente
     if (idClient.value === '') {
@@ -262,9 +239,9 @@ api.setName((args) => {
 api.setCpf((args) => {
     console.log("teste do IPC 'set-cpf'")
     let buscaCpf = document.getElementById('searchCliente').value
-    nome.focus()
+    cnpj.focus()
     foco.value = ""
-    cpf.value = buscaCpf
+    cnpj.value = buscaCpf
     restaurarEnter()
 })
 
@@ -278,7 +255,7 @@ function searchName() {
     }
 
     // Verifica se é CPF (somente números e 11 dígitos)
-    let isCpf = /^\d{11}$/.test(input.replace(/\D/g, ''))
+    let isCpf = /^\d{14}$/.test(input.replace(/\D/g, ''));
 
     if (isCpf) {
         // Buscar por CPF
@@ -345,7 +322,7 @@ function restaurarEnter() {
 const btnDelete = document.getElementById('btnDelete')
 
 // Função para excluir cliente
-function excluirCliente() {
+function excluirForm() {
     const idCliente = arrayClient[0]._id // Pegando o ID do cliente no array
     console.log("ID para excluir:", idCliente) // Só pra testar
 
@@ -354,7 +331,7 @@ function excluirCliente() {
 }
 
 // Escutar o clique do botão excluir
-btnDelete.addEventListener('click', excluirCliente)
+btnDelete.addEventListener('click', excluirForm)
 
 api.limparForm(() => {
     document.getElementById('formCliente').reset()
@@ -365,10 +342,4 @@ api.limparForm(() => {
 })
 // Fim Excluir Cliente =======================================================
 
-//============================================================================
-
-// Editar Cliente ============================================================
-
-
-// Fim Editar Cliente ========================================================
 //============================================================================

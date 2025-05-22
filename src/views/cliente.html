@@ -16,133 +16,128 @@
     <section class="containercli" id="inputForm">
         <!-- FORMULARIO -->
         <form id="formCliente" class="row g-3">
-            <form id="formCliente" class="row g-3">
-                <form id="formCliente" class="row g-3">
-                    <!-- Campo de busca -->
-                    <div class="row mb-4">
-                        <div class="col-md-9">
-                            <input type="text" id="searchCliente" class="form-control" placeholder="Buscar Empresa">
-                        </div>
-                        <div class="col-md-3">
-                            <button type="button" class="btn btn-primary w-100" onclick="searchName()">Buscar</button>
-                        </div>
-                    </div>
+            <!-- Campo de busca -->
+            <div class="row mb-4">
+                <div class="col-md-9">
+                    <input type="text" id="searchCliente" class="form-control" placeholder="Buscar Empresa">
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary w-100" onclick="searchName()">Buscar</button>
+                </div>
+            </div>
 
-                    <!-- ID oculto -->
-                    <input type="hidden" id="inputIdClient">
+            <!-- ID oculto -->
+            <input type="hidden" id="inputIdClient">
 
-                    <!-- Nome e CNPJ -->
-                    <div class="col-md-6">
-                        <label for="inputNome" class="form-label">Nome</label>
-                        <input type="text" id="inputNome" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="inputCpf" class="form-label">CNPJ</label>
-                        <input type="text" id="inputCpf" class="form-control" required onblur="validarCNPJ()">
-                        <div id="cpfErro" class="text-danger mt-1" style="display: none;">CNPJ inválido</div>
-                    </div>
+            <!-- Nome e CNPJ -->
+            <div class="col-md-6">
+                <label for="inputNome" class="form-label">Nome</label>
+                <input type="text" id="inputNome" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label for="inputCpf" class="form-label">CNPJ</label>
+                <input type="text" id="inputCpf" class="form-control" required onblur="validarCNPJ()">
+                <div id="cpfErro" class="text-danger mt-1" style="display: none;">CNPJ inválido</div>
+            </div>
 
-                    <!-- Razão Social, Email, Telefone -->
-                    <div class="col-md-4">
-                        <label for="inputSexo" class="form-label">Razão Social</label>
-                        <input type="text" id="inputSocial" class="form-control" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="inputEmail" class="form-label">E-mail</label>
-                        <input type="email" id="inputEmail" class="form-control" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="inputTelefone" class="form-label">Telefone</label>
-                        <input type="text" id="inputTelefone" class="form-control" required>
-                    </div>
+            <!-- Razão Social, Email, Telefone -->
+            <div class="col-md-4">
+                <label for="inputSexo" class="form-label">Razão Social</label>
+                <input type="text" id="inputSocial" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label for="inputEmail" class="form-label">E-mail</label>
+                <input type="email" id="inputEmail" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label for="inputTelefone" class="form-label">Telefone</label>
+                <input type="text" id="inputTelefone" class="form-control" required>
+            </div>
 
-                    <!-- Site da Empresa -->
-                    <div class="col-md-12">
-                        <label for="inputSite" class="form-label">Site da Empresa</label>
-                        <div class="d-flex">
-                            <input type="url" id="inputSite" class="form-control me-2" style="max-width: 700px;">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                onclick="window.open(document.getElementById('inputSite').value, '_blank')">Ir para Site</button>
-                        </div>
-                    </div>
+            <!-- Site da Empresa -->
+            <div class="col-md-12">
+                <label for="inputSite" class="form-label">Site da Empresa</label>
+                <div class="d-flex">
+                    <input type="url" id="inputSite" class="form-control me-2" style="max-width: 700px;">
+                    <!--<button type="button" class="btn btn-primary btn-sm"
+                                onclick="window.open(document.getElementById('inputSite').value, '_blank')">Ir para Site</button>-->
+                </div>
+            </div>
 
 
-                    <!-- CEP, Logradouro, Número -->
-                    <div class="col-md-4">
-                        <label for="inputCep" class="form-label">CEP</label>
-                        <input type="text" id="inputCep" class="form-control" maxlength="9" onblur="buscarEndereco()"
-                            required>
-                    </div>
-                    <div class="col-md-5">
-                        <label for="inputLogradouro" class="form-label">Logradouro</label>
-                        <input type="text" id="inputLogradouro" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="inputNumero" class="form-label">Número</label>
-                        <input type="text" id="inputNumero" class="form-control">
-                    </div>
+            <!-- CEP, Logradouro, Número -->
+            <div class="col-md-4">
+                <label for="inputCep" class="form-label">CEP</label>
+                <input type="text" id="inputCep" class="form-control" maxlength="9" onblur="buscarEndereco()" required>
+            </div>
+            <div class="col-md-5">
+                <label for="inputLogradouro" class="form-label">Logradouro</label>
+                <input type="text" id="inputLogradouro" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="inputNumero" class="form-label">Número</label>
+                <input type="text" id="inputNumero" class="form-control">
+            </div>
 
-                    <!-- Bairro, Cidade, UF -->
-                    <div class="col-md-4">
-                        <label for="inputBairro" class="form-label">Bairro</label>
-                        <input type="text" id="inputBairro" class="form-control">
-                    </div>
-                    <div class="col-md-5">
-                        <label for="inputCidade" class="form-label">Cidade</label>
-                        <input type="text" id="inputCidade" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="inputUf" class="form-label">UF</label>
-                        <select id="inputUf" class="form-select" required>
-                            <option value="">Selecione</option>
-                            <option value="AC">AC</option>
-                            <option value="AL">AL</option>
-                            <option value="AP">AP</option>
-                            <option value="AM">AM</option>
-                            <option value="BA">BA</option>
-                            <option value="CE">CE</option>
-                            <option value="DF">DF</option>
-                            <option value="ES">ES</option>
-                            <option value="GO">GO</option>
-                            <option value="MA">MA</option>
-                            <option value="MT">MT</option>
-                            <option value="MS">MS</option>
-                            <option value="MG">MG</option>
-                            <option value="PA">PA</option>
-                            <option value="PB">PB</option>
-                            <option value="PR">PR</option>
-                            <option value="PE">PE</option>
-                            <option value="PI">PI</option>
-                            <option value="RJ">RJ</option>
-                            <option value="RN">RN</option>
-                            <option value="RS">RS</option>
-                            <option value="RO">RO</option>
-                            <option value="RR">RR</option>
-                            <option value="SC">SC</option>
-                            <option value="SP">SP</option>
-                            <option value="SE">SE</option>
-                            <option value="TO">TO</option>
-                        </select>
-                    </div>
+            <!-- Bairro, Cidade, UF -->
+            <div class="col-md-4">
+                <label for="inputBairro" class="form-label">Bairro</label>
+                <input type="text" id="inputBairro" class="form-control">
+            </div>
+            <div class="col-md-5">
+                <label for="inputCidade" class="form-label">Cidade</label>
+                <input type="text" id="inputCidade" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="inputUf" class="form-label">UF</label>
+                <select id="inputUf" class="form-select" required>
+                    <option value="">Selecione</option>
+                    <option value="AC">AC</option>
+                    <option value="AL">AL</option>
+                    <option value="AP">AP</option>
+                    <option value="AM">AM</option>
+                    <option value="BA">BA</option>
+                    <option value="CE">CE</option>
+                    <option value="DF">DF</option>
+                    <option value="ES">ES</option>
+                    <option value="GO">GO</option>
+                    <option value="MA">MA</option>
+                    <option value="MT">MT</option>
+                    <option value="MS">MS</option>
+                    <option value="MG">MG</option>
+                    <option value="PA">PA</option>
+                    <option value="PB">PB</option>
+                    <option value="PR">PR</option>
+                    <option value="PE">PE</option>
+                    <option value="PI">PI</option>
+                    <option value="RJ">RJ</option>
+                    <option value="RN">RN</option>
+                    <option value="RS">RS</option>
+                    <option value="RO">RO</option>
+                    <option value="RR">RR</option>
+                    <option value="SC">SC</option>
+                    <option value="SP">SP</option>
+                    <option value="SE">SE</option>
+                    <option value="TO">TO</option>
+                </select>
+            </div>
 
-                    <!-- Botões -->
-                    <div class="col-12 py-3 rodape">
-                        <div class="botao-container">
-                            <button type="submit" class="btn btn-success" id="btnCreate">ADICIONAR</button>
-                            <button type="submit" class="btn btn-warning" id="btnUpdate">EDITAR</button>
-                            <button type="button" class="btn btn-danger" onclick="excluirForm()" id="btnDelete">EXCLUIR</button>
-                            <button type="reset" class="btn btn-primary" onclick="resetForm()" id="btnReset"></button>
-                        </div>
-                    </div>
+            <!-- Botões -->
+            <div class="col-12 py-3 rodape">
+                <div class="botao-container">
+                    <button type="submit" class="btn btn-success" id="btnCreate">ADICIONAR</button>
+                    <button type="submit" class="btn btn-warning" id="btnUpdate">EDITAR</button>
+                    <button type="button" class="btn btn-danger" onclick="excluirForm()" id="btnDelete">EXCLUIR</button>
+                    <button type="reset" class="btn btn-primary" onclick="resetForm()" id="btnReset"></button>
+                </div>
+            </div>
 
-                    <!-- Mensagem de sucesso -->
-                    <div id="mensagemSucesso" class="text-success text-center mt-3" style="display: none;">
-                        Cadastro realizado com sucesso!
-                    </div>
-                </form>
+            <!-- Mensagem de sucesso -->
+            <div id="mensagemSucesso" class="text-success text-center mt-3" style="display: none;">
+                Cadastro realizado com sucesso!
+            </div>
 
-            </form>
-
+            <div class="logo"><img src="../public/img/vortex.png" alt="vortex"></div>
         </form>
     </section>
 
