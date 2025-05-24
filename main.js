@@ -406,22 +406,14 @@ ipcMain.on('search-name', async (event, cliName) => {
 //= FIM CRUD ======================================================================
 //=================================================================================
 //= CRUD READ - Busca Cpf =========================================================
-ipcMain.on('validate-cpf', () => {
-  dialog.showMessageBox({
-    type: 'warning',
-    title: 'atenção',
-    message: 'Preencher o campo de Cnpj',
-    buttons: ['OK']
-  })
-})
-ipcMain.on('search-cpf', async (event, cliCpf) => {
+ipcMain.on('search-cnpj', async (event, cliCpf) => {
   // Teste do recebimento do nome do cliente (Passo 2)
   console.log(cliCpf)
   try {
     // Passos 3 e 4 (Busca dos dados do cliente pelo nome)
     // RegExp (expresão regular 'i' -> insentive (ignorar letra maiuscula ou minuscula))
     const client = await clienteModel.find({
-      cpf: new RegExp(cliCpf, 'i')
+      cnpj: new RegExp(cliCpf, 'i')
     })
     // teste da busca do cliente pelo nome (Passo 3 e 4)
     console.log(client)
@@ -438,7 +430,7 @@ ipcMain.on('search-cpf', async (event, cliCpf) => {
         // se o botão sim for pressionado
         if (result.response === 0) {
           // Enviar ao pedido para renderer um pedido para recortar e copiar o nome do cliente
-          event.reply('set-cpf')
+          event.reply('set-cnpj')
         } else {
           // Enviar ao renderer um pedido para limpar o campo
           event.reply('reset-form')
@@ -535,17 +527,23 @@ ipcMain.on('update-client', async (event, client) => {
 // Fim Editar Cliente ===============================================================
 //===================================================================================
 
-//****************************** CADASTRO NOTA FISCAL ******************************/
+//**************************************************************************************************************/
+//****************************** CADASTRO NOTA FISCAL *********************************************************/
+//*************************************************************************************************************/
+
 //= CRUD CREATE - CADASTRAR NOTA ==================================================
 ipcMain.on('create-nota', async (event, newNota) => {
   console.log(newNota)
   try {
     const newNotas = notaModel({
+      nome: newNota.nomeCad,
       nota: newNota.notaCad,
-      empresa: newNota.empresaCad,
+      chave: newNota.chaveCad,
       cnpj: newNota.cnpjCad,
       data: newNota.dataCad,
-      valor: newNota.valorCad,
+      entrega: newNota.entregaCad,
+      pagamento: newNota.pagamentoCad,
+      total: newNota.totalCad,
       item: newNota.itemCad,
       quantidade: newNota.quantidadeCad,
       unitario: newNota.unitarioCad
@@ -565,23 +563,59 @@ ipcMain.on('create-nota', async (event, newNota) => {
     })
 
   } catch (error) {
-    // Tratamento da excessão "CNPJ duplicado"
-    if (error.code === 11000) {
+    console.log(error)
+  }
+})
+//===================================================================================
+
+// Buscar Nota ======================================================================
+// Validação da busca
+ipcMain.on('validate-search', () => {
+  dialog.showMessageBox({
+    type: 'warning',
+    title: 'atenção',
+    message: 'Preencher o campo de busca',
+    buttons: ['OK']
+  })
+})
+
+ipcMain.on('search-nota', async (event, cliNota) => {
+  // Teste do recebimento do nome do cliente (Passo 2)
+  console.log(cliNota)
+  try {
+    // Passos 3 e 4 (Busca dos dados do cliente pelo nome)
+    // RegExp (expresão regular 'i' -> insentive (ignorar letra maiuscula ou minuscula))
+    const nota = await notaModel.find({
+      nota: new RegExp(cliNota, 'i')
+    })
+    // teste da busca do cliente pelo nome (Passo 3 e 4)
+    console.log(nota)
+    // Melhoria da experiencia do usuario (se não existir um cliente cadastrado enviar uma mensagem)
+    if (client.length === 0) {
+      // Questionar o usuario.....
       dialog.showMessageBox({
-        type: 'error',
-        title: "Atenção!!!",
-        message: "CNPJ já cadastrado.\nVerifique o número digitado",
-        buttons: ['OK']
+        type: 'warning',
+        title: 'Aviso',
+        message: 'Nota não cadastrada. \nDeseja cadastrar esta Nota',
+        defaultId: 0,
+        buttons: ['Sim', 'Não']
       }).then((result) => {
-        // Se o botão OK for pressionado
+        // se o botão sim for pressionado
         if (result.response === 0) {
-          // Encontrar o campo de CPF
-          event.reply('reset-cnpj')
+          // Enviar ao pedido para renderer um pedido para recortar e copiar o nome do cliente
+          event.reply('set-nota')
+        } else {
+          // Enviar ao renderer um pedido para limpar o campo
+          event.reply('reset-form')
         }
       })
+
     } else {
-      console.log(error);
+      // Enviar ao renderizador (rendererCliente) os dados do cliente (Passo 5) OBS: converter para string
+      event.reply('render-nota', JSON.stringify(nota))
     }
+  } catch (error) {
+    console.log(error)
   }
 })
 //===================================================================================

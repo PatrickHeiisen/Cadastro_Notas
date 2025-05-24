@@ -105,6 +105,18 @@ function validarFormulario(event) {
     }
 }
 //=============================================================================
+// Site
+function irParaSite() {
+    const site = document.getElementById('inputSite').value;
+    
+    if (site) {
+        // Redireciona na mesma aba
+        window.location.href = site;
+    } else {
+        alert("Por favor, digite uma URL válida.");
+    }
+}
+
 //=============================================================================
 // processo de cadastro do cliente
 const foco = document.getElementById('searchCliente')
@@ -236,12 +248,12 @@ api.setName((args) => {
     restaurarEnter()
 })
 
-api.setCpf((args) => {
+api.setCnpj((args) => {
     console.log("teste do IPC 'set-cpf'")
-    let buscaCpf = document.getElementById('searchCliente').value
+    let buscarCpf = document.getElementById('searchCliente').value
     cnpj.focus()
     foco.value = ""
-    cnpj.value = buscaCpf
+    cnpj.value = buscarCpf
     restaurarEnter()
 })
 
@@ -259,7 +271,7 @@ function searchName() {
 
     if (isCpf) {
         // Buscar por CPF
-        api.buscarCpf(input)
+        api.buscarCnpj(input)
     } else {
         // Buscar por nome
         api.searchName(input)

@@ -1,11 +1,14 @@
 const { model, Schema } = require('mongoose')
 
 const notaSchema = new Schema({
+    nome: { type: String },
     nota: { type: String },
-    empresa: { type: String },
+    chave: { type: String },
     cnpj: { type: String, unique: true},
     data: { type: String},
-    valor: { type: String },
+    entrega: { type: String },
+    pagamento: { type: String },
+    total: { type: String },
     item: { type: String },
     quantidade: { type: String },
     unitario: { type: String }

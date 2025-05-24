@@ -17,17 +17,20 @@ contextBridge.exposeInMainWorld('api', {
     aboutExit: () => ipcRenderer.send('about-exit'),
     createCliente: (newCliente) => ipcRenderer.send('create-cliente', newCliente),
     resetForm: (args) => ipcRenderer.on('reset-form', args),
-    resetCpf: (args) => ipcRenderer.on('reset-cpf', args),
+    resetCnpj: (args) => ipcRenderer.on('reset-Cnpj', args),
     searchName: (cliName) => ipcRenderer.send('search-name', cliName),
     renderClient: (client) => ipcRenderer.on('render-client', client),
     validateSearch: () => ipcRenderer.send('validate-search'),
     setName: (args) => ipcRenderer.on('set-name', args),
-    buscarCpf: (cliCpf) => ipcRenderer.send('search-cpf', cliCpf),
-    setCpf: (args) => ipcRenderer.on('set-cpf', args),
+    buscarCnpj: (cliCpf) => ipcRenderer.send('search-cnpj', cliCpf),
+    setCnpj: (args) => ipcRenderer.on('set-cnpj', args),
     deleteCli: (id) => ipcRenderer.send('delete-cli', id),
     limparForm: (callback) => ipcRenderer.on('limpar-form', callback),
     updateClient: (client) => ipcRenderer.send('update-client', client),
     // Cadastro Nota
     notaWindow: () => ipcRenderer.send('nota-window'),
-    createNota: (newNota) => ipcRenderer.send('create-nota', newNota)
+    createNota: (newNota) => ipcRenderer.send('create-nota', newNota),
+    setNota: (args) => ipcRenderer.on('set-nota', args),
+    searchNota: (cliNota) => ipcRenderer.send('search-nota', cliNota),
+    renderNota: (nota) => ipcRenderer.on('render-nota', nota)
 })
