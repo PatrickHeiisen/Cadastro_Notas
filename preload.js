@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('api', {
     renderClient: (client) => ipcRenderer.on('render-client', client),
     validateSearch: () => ipcRenderer.send('validate-search'),
     setName: (args) => ipcRenderer.on('set-name', args),
-    buscarCnpj: (cliCpf) => ipcRenderer.send('search-cnpj', cliCpf),
+    buscarCnpj: (cliCnpj) => ipcRenderer.send('search-cnpj', cliCnpj),
     setCnpj: (args) => ipcRenderer.on('set-cnpj', args),
     deleteCli: (id) => ipcRenderer.send('delete-cli', id),
     limparForm: (callback) => ipcRenderer.on('limpar-form', callback),
@@ -30,7 +30,8 @@ contextBridge.exposeInMainWorld('api', {
     // Cadastro Nota
     notaWindow: () => ipcRenderer.send('nota-window'),
     createNota: (newNota) => ipcRenderer.send('create-nota', newNota),
-    setNota: (args) => ipcRenderer.on('set-nota', args),
-    searchNota: (cliNota) => ipcRenderer.send('search-nota', cliNota),
-    renderNota: (nota) => ipcRenderer.on('render-nota', nota)
+    searchNota: (dados) => ipcRenderer.send('search-nota', dados),
+    renderNota: (callback) => ipcRenderer.on('render-nota', callback),
+    setNota: (callback) => ipcRenderer.on('set-nota', callback),
+    deleteNota: (id) => ipcRenderer.send('delete-nota', id)
 })

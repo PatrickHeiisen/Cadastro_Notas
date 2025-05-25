@@ -108,7 +108,7 @@ function validarFormulario(event) {
 // Site
 function irParaSite() {
     const site = document.getElementById('inputSite').value;
-    
+
     if (site) {
         // Redireciona na mesma aba
         window.location.href = site;
@@ -248,12 +248,12 @@ api.setName((args) => {
     restaurarEnter()
 })
 
-api.setCnpj((args) => {
-    console.log("teste do IPC 'set-cpf'")
-    let buscarCpf = document.getElementById('searchCliente').value
-    cnpj.focus()
+api.setCpf((args) => {
+    console.log("teste do IPC 'set-cnpj'")
+    let buscaCnpj = document.getElementById('searchCliente').value
+    nome.focus()
     foco.value = ""
-    cnpj.value = buscarCpf
+    cnpj.value = buscaCnpj
     restaurarEnter()
 })
 
@@ -267,11 +267,11 @@ function searchName() {
     }
 
     // Verifica se é CPF (somente números e 11 dígitos)
-    let isCpf = /^\d{14}$/.test(input.replace(/\D/g, ''));
+    let isCpf = /^\d{11}$/.test(input.replace(/\D/g, ''))
 
     if (isCpf) {
         // Buscar por CPF
-        api.buscarCnpj(input)
+        api.buscarCpf(input)
     } else {
         // Buscar por nome
         api.searchName(input)
@@ -335,11 +335,11 @@ const btnDelete = document.getElementById('btnDelete')
 
 // Função para excluir cliente
 function excluirForm() {
-    const idCliente = arrayClient[0]._id // Pegando o ID do cliente no array
-    console.log("ID para excluir:", idCliente) // Só pra testar
+    const idClient = arrayClient[0]._id // Pegando o ID do cliente no array
+    console.log("ID para excluir:", idClient) // Só pra testar
 
     // Enviar o ID para o main via preload.js
-    api.deleteCli(idCliente)
+    api.deleteCli(idClient)
 }
 
 // Escutar o clique do botão excluir

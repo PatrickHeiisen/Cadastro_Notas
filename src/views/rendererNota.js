@@ -116,6 +116,7 @@ let total = document.getElementById('inputTotal')
 let item = document.getElementById('inputItem')
 let quantidade = document.getElementById('inputQtde')
 let unitario = document.getElementById('inputUnitario')
+let idNota = document.getElementById('inputIdNota')
 //============================================================================
 
 //= CRUD CREATE ==============================================================
@@ -136,67 +137,146 @@ formNota.addEventListener('submit', async (event) => {
         quantidade.value,
         unitario.value
     )
-    const newNota = {
-        nomeCad: nome.value,
-        notaCad: nota.value,
-        chaveCad: chave.value,
-        cnpjCad: cnpj.value,
-        dataCad: data.value,
-        entregaCad: entrega.value,
-        pagamentoCad: pagamento.value,
-        totalCad: total.value,
-        itemCad: item.value,
-        quantidadeCad: quantidade.value,
-        unitarioCad: unitario.value
+    if (idNota.value === '') {
+        const newNota = {
+            nomeCad: nome.value,
+            notaCad: nota.value,
+            chaveCad: chave.value,
+            cnpjCad: cnpj.value,
+            dataCad: data.value,
+            entregaCad: entrega.value,
+            pagamentoCad: pagamento.value,
+            totalCad: total.value,
+            itemCad: item.value,
+            quantidadeCad: quantidade.value,
+            unitarioCad: unitario.value
+        }
+        // Enviar ao main
+        api.createNota(newNota)
+    } else {
+        const nota = {
+            idNota: idNota.value,
+            nomeCad: nome.value,
+            notaCad: nota.value,
+            chaveCad: chave.value,
+            cnpjCad: cnpj.value,
+            dataCad: data.value,
+            entregaCad: entrega.value,
+            pagamentoCad: pagamento.value,
+            totalCad: total.value,
+            itemCad: item.value,
+            quantidadeCad: quantidade.value,
+            unitarioCad: unitario.value
+        }
+        api.updateNota(nota)
     }
-    // Enviar ao main
-    api.createNota(newNota)
 })
 //= FIM =========================================================================
 
 //= Buscar Nota =================================================================
-api.setNota((args) => {
-    console.log("teste do IPC 'set-name'")
-    // "recortar" o nome na busca e setar no campo nome do form
-    let busca = document.getElementById('searchNota').value
-    // foco no campo de busca
-    nota.focus()
-    // limpar o campo de busca
-    foco.value = ""
-    // copiar o nome do cliente para o campo nome
-    nota.value = busca
-    // restaurar tecla enter
-    restaurarEnter()
-})
+// Função que limpa o campo buscarNota e cola no campo nome
+api.setNota(() => {
+    const campoBusca = document.getElementById('buscarNota');
+    const campoNome = document.getElementById('inputNota');
 
-function buscarNota() {
-    let input = document.getElementById('searchNota').value.trim()
-    console.log(input)
+    if (campoNome && campoBusca) {
+        campoNome.value = campoBusca.value;
+        campoBusca.value = "";
+        campoNome.focus(); // foco no campo nome
+    }
 
-    api.renderNota((event, nota) => {
-        const notaData = JSON.parse(nota)
-        arrayClient = notaData
-        // Uso do forEach para percorrer o vetor
-        arrayNota.forEach((c) => {
-            nome.value = c.nome
-            nota.value = c.nota
-            chave.value = c.chave
-            cnpj.value = c.cnpj
-            data.value = c.data
-            entrega.value = c.entrega
-            pagamento.value = c.pagamento
-            total.value = c.total
-            item.value = c.item
-            quantidade.value = c.quantidade
-            unitario.value = c.unitario
-            restaurarEnter()
-            //desativar o botão adicionar
-            btnCreate.disabled = true
-            // ativar e desativar o botão editar e excluir
-            btnUpdate.disabled = false
-            btnDelete.disabled = false
-        })
+    restaurarEnter();
+});
 
-    })
+function searchNota() {
+    const input = document.getElementById('buscarNota').value.trim();
+
+    if (input === "") {
+        api.validateSearch();
+        return;
+    }
+
+    api.searchNota(input); // envia pro main
 }
+
+// Recebe a nota vinda do main e preenche os campos
+api.renderNota((event, nota) => {
+    const dados = JSON.parse(nota)
+    const notaInfo = dados[0] // se for array
+
+    // Preenche os campos (garanta que os IDs estão corretos)
+    document.getElementById('inputNome').value = notaInfo.nome
+    document.getElementById('inputNota').value = notaInfo.nota
+    document.getElementById('inputChave').value = notaInfo.chave
+    document.getElementById('inputCnpj').value = notaInfo.cnpj
+    document.getElementById('inputData').value = notaInfo.data
+    document.getElementById('inputEntrega').value = notaInfo.entrega
+    document.getElementById('inputPagamento').value = notaInfo.pagamento
+    document.getElementById('inputTotal').value = notaInfo.total
+    document.getElementById('inputItem').value = notaInfo.item
+    document.getElementById('inputQtde').value = notaInfo.quantidade
+    document.getElementById('inputUnitario').value = notaInfo.unitario
+
+    // Atualiza botões
+    btnCreate.disabled = true
+    btnUpdate.disabled = false
+    btnDelete.disabled = false
+
+    restaurarEnter()
+});
 //===============================================================================
+
+//= Manipulação do Enter ========================================================
+function teclaEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault() //ignorar o comportamento padrão
+        // executar o metodo de busca do cliente
+        searchNota()
+    }
+}
+
+// "Escuta" do teclado ('keydown' = pressionar tecla)
+formNota.addEventListener('keydown', teclaEnter)
+
+// função para restaurar o padrão (tecla enter)
+function restaurarEnter() {
+    formNota.removeEventListener('keydown', teclaEnter)
+}
+//= FIM Manipulação do Enter ====================================================
+
+// Excluir Nota ==============================================================
+// Função para deletar Nota
+// Pega o botão de excluir
+const btnDelete = document.getElementById('btnDelete');
+
+// Função para excluir a nota
+function excluirNota() {
+    if (!arrayNota.length) return; // Garante que tem uma nota carregada
+
+    const idNota = arrayNota[0]._id;
+    console.log("ID para excluir:", idNota);
+
+    // Envia o ID da nota para o processo principal
+    api.deleteNota(idNota);
+}
+
+// Escuta o clique no botão
+btnDelete.addEventListener('click', excluirNota);
+
+// Escuta a limpeza do formulário vinda do main
+api.limparForm(() => {
+    document.getElementById('formNota').reset();
+
+    // Reseta os botões
+    btnCreate.disabled = false;
+    btnUpdate.disabled = true;
+    btnDelete.disabled = true;
+
+    // Limpa o array da nota
+    arrayNota = [];
+
+    // Coloca o foco no campo nome
+    document.getElementById('inputNome').focus();
+});
+
+// Fim Excluir Nota ==========================================================

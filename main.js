@@ -406,14 +406,23 @@ ipcMain.on('search-name', async (event, cliName) => {
 //= FIM CRUD ======================================================================
 //=================================================================================
 //= CRUD READ - Busca Cpf =========================================================
-ipcMain.on('search-cnpj', async (event, cliCpf) => {
+ipcMain.on('validate-search', () => {
+  dialog.showMessageBox({
+    type: 'warning',
+    title: 'atenção',
+    message: 'Preencher o campo de busca',
+    buttons: ['OK']
+  })
+})
+
+ipcMain.on('search-name', async (event, cliCnpj) => {
   // Teste do recebimento do nome do cliente (Passo 2)
-  console.log(cliCpf)
+  console.log(cliCnpj)
   try {
     // Passos 3 e 4 (Busca dos dados do cliente pelo nome)
     // RegExp (expresão regular 'i' -> insentive (ignorar letra maiuscula ou minuscula))
     const client = await clienteModel.find({
-      cnpj: new RegExp(cliCpf, 'i')
+      nome: new RegExp(cliCpf, 'i')
     })
     // teste da busca do cliente pelo nome (Passo 3 e 4)
     console.log(client)
@@ -423,7 +432,7 @@ ipcMain.on('search-cnpj', async (event, cliCpf) => {
       dialog.showMessageBox({
         type: 'warning',
         title: 'Aviso',
-        message: 'Cnpj não cadastrado. \nDeseja cadastrar esta empresa',
+        message: 'Cliente não cadastrado. \nDeseja cadastrar este cliente',
         defaultId: 0,
         buttons: ['Sim', 'Não']
       }).then((result) => {
@@ -436,6 +445,7 @@ ipcMain.on('search-cnpj', async (event, cliCpf) => {
           event.reply('reset-form')
         }
       })
+
     } else {
       // Enviar ao renderizador (rendererCliente) os dados do cliente (Passo 5) OBS: converter para string
       event.reply('render-client', JSON.stringify(client))
@@ -466,7 +476,7 @@ ipcMain.on('delete-cli', async (event, id) => {
 
       // Depois recarrega se precisar
       win.webContents.send('main-reload')
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -570,28 +580,19 @@ ipcMain.on('create-nota', async (event, newNota) => {
 
 // Buscar Nota ======================================================================
 // Validação da busca
-ipcMain.on('validate-search', () => {
-  dialog.showMessageBox({
-    type: 'warning',
-    title: 'atenção',
-    message: 'Preencher o campo de busca',
-    buttons: ['OK']
-  })
-})
-
-ipcMain.on('search-nota', async (event, cliNota) => {
+ipcMain.on('search-nota', async (event, cadNota) => {
   // Teste do recebimento do nome do cliente (Passo 2)
-  console.log(cliNota)
+  console.log(cadNota)
   try {
     // Passos 3 e 4 (Busca dos dados do cliente pelo nome)
     // RegExp (expresão regular 'i' -> insentive (ignorar letra maiuscula ou minuscula))
     const nota = await notaModel.find({
-      nota: new RegExp(cliNota, 'i')
+      nota: new RegExp(cadNota, 'i')
     })
     // teste da busca do cliente pelo nome (Passo 3 e 4)
     console.log(nota)
     // Melhoria da experiencia do usuario (se não existir um cliente cadastrado enviar uma mensagem)
-    if (client.length === 0) {
+    if (nota.length === 0) {
       // Questionar o usuario.....
       dialog.showMessageBox({
         type: 'warning',
@@ -620,3 +621,30 @@ ipcMain.on('search-nota', async (event, cliNota) => {
 })
 //===================================================================================
 
+// Excluir Cliente ==================================================================
+// Recebe o pedido para excluir a nota
+ipcMain.on('delete-nota', async (event, id) => {
+  console.log(id) // Teste do passo 2 (importante)
+
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'warning',
+    title: "Atenção!",
+    message: "Tem certeza que deseja excluir esta nota?\nEsta ação não poderá ser desfeita.",
+    buttons: ['Cancelar', 'Excluir'] // [0,1]
+  });
+
+  if (response === 1) {
+    try {
+      const deleteNota = await clienteModel.findByIdAndDelete(id)
+
+      // Manda limpar o formulário depois de excluir
+      win.webContents.send('limpar-form')
+
+      // Depois recarrega se precisar
+      win.webContents.send('main-reload')
+    } catch (error) {
+      console.log(error);
+    }
+  }
+})
+// Fim Excluir Cliente ==============================================================
