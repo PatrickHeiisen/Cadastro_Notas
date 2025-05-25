@@ -176,27 +176,27 @@ formNota.addEventListener('submit', async (event) => {
 //= Buscar Nota =================================================================
 // Função que limpa o campo buscarNota e cola no campo nome
 api.setNota(() => {
-    const campoBusca = document.getElementById('buscarNota');
-    const campoNome = document.getElementById('inputNota');
+    const campoBusca = document.getElementById('buscarNota')
+    const campoNome = document.getElementById('inputNota')
 
     if (campoNome && campoBusca) {
-        campoNome.value = campoBusca.value;
-        campoBusca.value = "";
-        campoNome.focus(); // foco no campo nome
+        campoNome.value = campoBusca.value
+        campoBusca.value = ""
+        campoNome.focus() // foco no campo nome
     }
 
-    restaurarEnter();
-});
+    restaurarEnter()
+})
 
 function searchNota() {
-    const input = document.getElementById('buscarNota').value.trim();
+    const input = document.getElementById('buscarNota').value.trim()
 
     if (input === "") {
-        api.validateSearch();
+        api.validateSearch()
         return;
     }
 
-    api.searchNota(input); // envia pro main
+    api.searchNota(input) // envia pro main
 }
 
 // Recebe a nota vinda do main e preenche os campos
@@ -245,38 +245,27 @@ function restaurarEnter() {
 //= FIM Manipulação do Enter ====================================================
 
 // Excluir Nota ==============================================================
-// Função para deletar Nota
-// Pega o botão de excluir
-const btnDelete = document.getElementById('btnDelete');
+let arrayNota = []
+// Função para deletar cliente
+const btnDelete = document.getElementById('btnDelete')
 
-// Função para excluir a nota
+// Função para excluir cliente
 function excluirNota() {
-    if (!arrayNota.length) return; // Garante que tem uma nota carregada
+    const idNota = arrayNota[0]._id // Pegando o ID do cliente no array
+    console.log("ID para excluir:", idNota) // Só pra testar
 
-    const idNota = arrayNota[0]._id;
-    console.log("ID para excluir:", idNota);
-
-    // Envia o ID da nota para o processo principal
-    api.deleteNota(idNota);
+    // Enviar o ID para o main via preload.js
+    api.deleteNota(idNota)
 }
 
-// Escuta o clique no botão
-btnDelete.addEventListener('click', excluirNota);
+// Escutar o clique do botão excluir
+btnDelete.addEventListener('click', excluirNota)
 
-// Escuta a limpeza do formulário vinda do main
 api.limparForm(() => {
-    document.getElementById('formNota').reset();
-
-    // Reseta os botões
-    btnCreate.disabled = false;
-    btnUpdate.disabled = true;
-    btnDelete.disabled = true;
-
-    // Limpa o array da nota
-    arrayNota = [];
-
-    // Coloca o foco no campo nome
-    document.getElementById('inputNome').focus();
-});
-
+    document.getElementById('formNota').reset()
+    arrayNota = [] // zera o array
+    btnCreate.disabled = false
+    btnUpdate.disabled = true
+    btnDelete.disabled = true
+})
 // Fim Excluir Nota ==========================================================
