@@ -635,7 +635,7 @@ ipcMain.on('delete-nota', async (event, id) => {
 
   if (response === 1) {
     try {
-      const deleteNota = await clienteModel.findByIdAndDelete(id)
+      const deleteNota = await notaModel.findByIdAndDelete(id)
 
       // Manda limpar o formulário depois de excluir
       win.webContents.send('limpar-form')

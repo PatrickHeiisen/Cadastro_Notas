@@ -75,10 +75,8 @@ document.addEventListener('input', function (event) {
 // Limpar formulario
 document.getElementById("btnLimpar").addEventListener("click", function () {
     const form = document.getElementById("formNota")
-
     // Limpa o formulário
     form.reset()
-
     // Remove classes de erro (se estiver usando)
     const inputs = form.querySelectorAll(".form-control, .form-select")
     inputs.forEach(input => input.classList.remove("is-invalid"))
@@ -86,11 +84,6 @@ document.getElementById("btnLimpar").addEventListener("click", function () {
     // Foco no campo "Nome da Empresa"
     document.getElementById("inputNome").focus()
 })
-//===============================================================================
-
-//===============================================================================
-// Validar Formulario
-
 //===============================================================================
 
 //= RESET FORM ==================================================================
@@ -101,6 +94,18 @@ api.resetForm((args) => {
     resetForm()
 })
 //= FIM RESET FORM ==============================================================
+
+// processo de cadastro de nota
+const foco = document.getElementById('buscarNota')
+// Criar um vetor global para extrair os dados do cliente
+let arrayNota = []
+document.addEventListener('DOMContentLoaded', () => {
+    btnUpdate.disabled = true
+    btnDelete.disabled = true
+    // Ativar o botao adicionar
+    btnCreate.disabled = false
+    foco.focus()
+})
 
 // Processo de cadastro do cliente ==============================================
 // Captura de dados
@@ -205,6 +210,7 @@ api.renderNota((event, nota) => {
     const notaInfo = dados[0] // se for array
 
     // Preenche os campos (garanta que os IDs estão corretos)
+    document.getElementById('inputIdNota').value = notaInfo._id
     document.getElementById('inputNome').value = notaInfo.nome
     document.getElementById('inputNota').value = notaInfo.nota
     document.getElementById('inputChave').value = notaInfo.chave
@@ -221,9 +227,8 @@ api.renderNota((event, nota) => {
     btnCreate.disabled = true
     btnUpdate.disabled = false
     btnDelete.disabled = false
-
     restaurarEnter()
-});
+})
 //===============================================================================
 
 //= Manipulação do Enter ========================================================
@@ -244,14 +249,12 @@ function restaurarEnter() {
 }
 //= FIM Manipulação do Enter ====================================================
 
-// Excluir Nota ==============================================================
-let arrayNota = []
-// Função para deletar cliente
+// Excluir Nota =================================================================
 const btnDelete = document.getElementById('btnDelete')
 
 // Função para excluir cliente
 function excluirNota() {
-    const idNota = arrayNota[0]._id // Pegando o ID do cliente no array
+    //const idNota = arrayNota[0]._id // Pegando o ID do cliente no array
     console.log("ID para excluir:", idNota) // Só pra testar
 
     // Enviar o ID para o main via preload.js

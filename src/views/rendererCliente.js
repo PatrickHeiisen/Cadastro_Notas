@@ -329,7 +329,7 @@ function restaurarEnter() {
 
 //============================================================================
 
-// Excluir Cliente ===========================================================
+// Excluir Cliente ============================================================
 // Função para deletar cliente
 const btnDelete = document.getElementById('btnDelete')
 

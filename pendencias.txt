@@ -1,7 +1,8 @@
 layout do rodape e tela sobre, logotipo da empresa 
-site da empresa
+site da empresa -> abrir no navegador padrao
 botao quando clica abre o site da empresa
 layout da tela de fornecedores
 menu --> cadastro de fornecedor e notas
 menu --> notas pendentes faturadas
 tirar rodape
+
