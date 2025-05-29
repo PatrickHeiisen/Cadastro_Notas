@@ -17,6 +17,7 @@ const fs = require('fs')
 
 // IMportação do pacote jspdf (arquivos pdf) npm install jspdf
 const { jspdf, default: jsPDF } = require('jspdf')
+const Nota = require('./src/models/Nota.js')
 
 //Janela Principal
 let win
@@ -648,3 +649,54 @@ ipcMain.on('delete-nota', async (event, id) => {
   }
 })
 // Fim Excluir Cliente ==============================================================
+
+// Editar Cliente / Update ========================================================
+ipcMain.on('update-nota', async (event, nota) => {
+  console.log(nota) // teste
+  try {
+    const updateNota = await notaModel.findByIdAndUpdate(
+      nota.idNota,
+      {
+        nome: nota.nomeCad,
+        nota: nota.notaCad,
+        chave: nota.chaveCad,
+        cnpj: nota.cnpjCad,
+        data: nota.dataCad,
+        entrega: nota.entregaCad,
+        pagamento: nota.pagamentoCad,
+        total: nota.totalCad,
+        item: nota.itemCad,
+        quantidade: nota.quantidadeCad,
+        unitario: nota.unitarioCad
+      },
+      { new: true }
+    )
+    dialog.showMessageBox({
+      type: 'info',
+      title: "Aviso",
+      message: "Dados da nota alterados com sucesso.",
+      buttons: ['OK']
+    }).then((result) => {
+      if (result.response === 0) {
+        event.reply('reset-form')
+      }
+    })
+
+  } catch (error) {
+    if (error.code === 11000) {
+      dialog.showMessageBox({
+        type: 'error',
+        title: "Atenção!!!",
+        message: "Cnpj já cadastrado.\nVerifique o número digitado",
+        buttons: ['OK']
+      }).then((result) => {
+        if (result.response === 0) {
+          event.reply('reset-cnpj')
+        }
+      })
+    } else {
+      console.log(error)
+    }
+  }
+})
+// Fim Editar Cliente ===============================================================

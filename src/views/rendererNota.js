@@ -130,6 +130,7 @@ formNota.addEventListener('submit', async (event) => {
     // evitar comportamento padrão de recarregar a página
     event.preventDefault()
     console.log(
+        idNota.value,
         nome.value,
         nota.value,
         chave.value,
@@ -160,7 +161,6 @@ formNota.addEventListener('submit', async (event) => {
         api.createNota(newNota)
     } else {
         const nota = {
-            idNota: idNota.value,
             nomeCad: nome.value,
             notaCad: nota.value,
             chaveCad: chave.value,
@@ -271,4 +271,6 @@ api.limparForm(() => {
     btnUpdate.disabled = true
     btnDelete.disabled = true
 })
-// Fim Excluir Nota ==========================================================
+// Fim Excluir Nota =============================================================
+
+
