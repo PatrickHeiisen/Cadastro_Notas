@@ -160,7 +160,8 @@ formNota.addEventListener('submit', async (event) => {
         // Enviar ao main
         api.createNota(newNota)
     } else {
-        const nota = {
+        const notas = {
+            idNot: idNota.value,
             nomeCad: nome.value,
             notaCad: nota.value,
             chaveCad: chave.value,
@@ -173,62 +174,82 @@ formNota.addEventListener('submit', async (event) => {
             quantidadeCad: quantidade.value,
             unitarioCad: unitario.value
         }
-        api.updateNota(nota)
+        api.updateNota(notas)
     }
 })
 //= FIM =========================================================================
 
 //= Buscar Nota =================================================================
-// Função que limpa o campo buscarNota e cola no campo nome
-api.setNota(() => {
-    const campoBusca = document.getElementById('buscarNota')
-    const campoNome = document.getElementById('inputNota')
+api.setNotas((args) => {
+    console.log("teste do IPC 'set-notas'")
+    // "recortar" o nome na busca e setar no campo nome do form
+    let buscar = document.getElementById('buscarNota').value
+    // foco no campo de busca
+    nota.focus()
+    // limpar o campo de busca
+    foco.value = ""
+    // copiar o nome do cliente para o campo nome
+    nota.value = buscar
+    // restaurar tecla enter
+    restaurarEnter()
+})
 
-    if (campoNome && campoBusca) {
-        campoNome.value = campoBusca.value
-        campoBusca.value = ""
-        campoNome.focus() // foco no campo nome
-    }
-
+api.setCnpj((args) => {
+    console.log("teste do IPC 'set-cnpj'")
+    let buscaCnpj = document.getElementById('buscarNota').value
+    cnpj.focus()
+    foco.value = ""
+    cnpj.value = buscaCnpj
     restaurarEnter()
 })
 
 function searchNota() {
-    const input = document.getElementById('buscarNota').value.trim()
+    let input = document.getElementById('buscarNota').value.trim()
+    console.log(input)
 
     if (input === "") {
         api.validateSearch()
-        return;
+        return
     }
 
-    api.searchNota(input) // envia pro main
+    // Verifica se é CPF (somente números e 11 dígitos)
+    let isCnpj = /^\d{14}$/.test(input.replace(/\D/g, ''))
+
+    if (isCnpj) {
+        // Buscar por CPF
+        api.buscarCnpj(input)
+    } else {
+        // Buscar por nome
+        api.searchNota(input)
+    }
+
+    api.renderNotas((event, notas) => {
+        const notasData = JSON.parse(notas)
+        arrayNota = notasData
+        // Uso do forEach para percorrer o vetor
+        arrayNota.forEach((c) => {
+            idNota.value = c._id
+            nome.value = c.nome
+            nota.value = c.nota
+            chave.value = c.chave
+            cnpj.value = c.cnpj
+            data.value = c.data
+            entrega.value = c.entrega
+            pagamento.value = c.pagamento
+            total.value = c.total
+            item.value = c.item
+            quantidade.value = c.quantidade
+            unitario.value = c.unitario
+            restaurarEnter()
+            //desativar o botão adicionar
+            btnCreate.disabled = true
+            // ativar e desativar o botão editar e excluir
+            btnUpdate.disabled = false
+            btnDelete.disabled = false
+        })
+
+    })
 }
-
-// Recebe a nota vinda do main e preenche os campos
-api.renderNota((event, nota) => {
-    const dados = JSON.parse(nota)
-    const notaInfo = dados[0] // se for array
-
-    // Preenche os campos (garanta que os IDs estão corretos)
-    document.getElementById('inputIdNota').value = notaInfo._id
-    document.getElementById('inputNome').value = notaInfo.nome
-    document.getElementById('inputNota').value = notaInfo.nota
-    document.getElementById('inputChave').value = notaInfo.chave
-    document.getElementById('inputCnpj').value = notaInfo.cnpj
-    document.getElementById('inputData').value = notaInfo.data
-    document.getElementById('inputEntrega').value = notaInfo.entrega
-    document.getElementById('inputPagamento').value = notaInfo.pagamento
-    document.getElementById('inputTotal').value = notaInfo.total
-    document.getElementById('inputItem').value = notaInfo.item
-    document.getElementById('inputQtde').value = notaInfo.quantidade
-    document.getElementById('inputUnitario').value = notaInfo.unitario
-
-    // Atualiza botões
-    btnCreate.disabled = true
-    btnUpdate.disabled = false
-    btnDelete.disabled = false
-    restaurarEnter()
-})
 //===============================================================================
 
 //= Manipulação do Enter ========================================================
@@ -250,12 +271,13 @@ function restaurarEnter() {
 //= FIM Manipulação do Enter ====================================================
 
 // Excluir Nota =================================================================
+// Função para deletar cliente
 const btnDelete = document.getElementById('btnDelete')
 
 // Função para excluir cliente
 function excluirNota() {
-    //const idNota = arrayNota[0]._id // Pegando o ID do cliente no array
-    console.log("ID para excluir:", idNota) // Só pra testar
+    const idNota = arrayNota[0]._id // Pegando o ID do cliente no array
+    //console.log("ID para excluir:", idNota) // Só pra testar
 
     // Enviar o ID para o main via preload.js
     api.deleteNota(idNota)
@@ -264,7 +286,7 @@ function excluirNota() {
 // Escutar o clique do botão excluir
 btnDelete.addEventListener('click', excluirNota)
 
-api.limparForm(() => {
+api.resetForm(() => {
     document.getElementById('formNota').reset()
     arrayNota = [] // zera o array
     btnCreate.disabled = false
@@ -273,4 +295,31 @@ api.limparForm(() => {
 })
 // Fim Excluir Nota =============================================================
 
+//= CRUD Update =============================================================
 
+// Capturar o botão de atualizar
+const btnUpdate = document.getElementById('btnUpdate')
+
+// Atualizar cliente
+btnUpdate.addEventListener('click', (event) => {
+    event.preventDefault()
+
+    const atualizado = {
+        idNot: idNota.value,
+        nomeCad: nome.value,
+        notaCad: nota.value,
+        chaveCad: chave.value,
+        cnpjCad: cnpj.value,
+        dataCad: data.value,
+        entregaCad: entrega.value,
+        pagamentoCad: pagamento.value,
+        totalCad: total.value,
+        itemCad: item.value,
+        quantidadeCad: quantidade.value,
+        unitarioCad: unitario.value
+    }
+
+    // Enviar os dados para o main.js
+    api.updateNota(atualizado)
+})
+//= Fim - CRUD Update =======================================================

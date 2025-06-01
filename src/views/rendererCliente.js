@@ -248,7 +248,7 @@ api.setName((args) => {
     restaurarEnter()
 })
 
-api.setCpf((args) => {
+api.setCnpj((args) => {
     console.log("teste do IPC 'set-cnpj'")
     let buscaCnpj = document.getElementById('searchCliente').value
     nome.focus()
@@ -267,11 +267,11 @@ function searchName() {
     }
 
     // Verifica se é CPF (somente números e 11 dígitos)
-    let isCpf = /^\d{11}$/.test(input.replace(/\D/g, ''))
+    let isCnpj = /^\d{14}$/.test(input.replace(/\D/g, ''))
 
-    if (isCpf) {
+    if (isCnpj) {
         // Buscar por CPF
-        api.buscarCpf(input)
+        api.buscarCnpj(input)
     } else {
         // Buscar por nome
         api.searchName(input)

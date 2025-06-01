@@ -30,9 +30,9 @@ contextBridge.exposeInMainWorld('api', {
     // Cadastro Nota
     notaWindow: () => ipcRenderer.send('nota-window'),
     createNota: (newNota) => ipcRenderer.send('create-nota', newNota),
-    searchNota: (dados) => ipcRenderer.send('search-nota', dados),
-    renderNota: (callback) => ipcRenderer.on('render-nota', callback),
-    setNota: (callback) => ipcRenderer.on('set-nota', callback),
+    searchNota: (cadNota) => ipcRenderer.send('search-nota', cadNota),
+    renderNotas: (notas) => ipcRenderer.on('render-notas', notas),
+    setNotas: (args) => ipcRenderer.on('set-notas', args),
     deleteNota: (id) => ipcRenderer.send('delete-nota', id),
-    updateNota: (nota) => ipcRenderer.send('update-nota', nota)
+    updateNota: (notas) => ipcRenderer.send('update-nota', notas)
 })

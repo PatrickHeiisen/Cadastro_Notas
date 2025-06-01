@@ -17,7 +17,6 @@ const fs = require('fs')
 
 // IMportação do pacote jspdf (arquivos pdf) npm install jspdf
 const { jspdf, default: jsPDF } = require('jspdf')
-const Nota = require('./src/models/Nota.js')
 
 //Janela Principal
 let win
@@ -202,7 +201,7 @@ const templete = [
     submenu: [
       {
         label: 'Repositório',
-        click: () => shell.openExternal('https://github.com/PatrickHeiisen/Cadastro_Nota.git')
+        click: () => shell.openExternal('https://github.com/PatrickHeiisen/Cadastro_Notas')
       },
       {
         label: 'Sobre',
@@ -278,8 +277,8 @@ ipcMain.on('create-cliente', async (event, newCliente) => {
 })
 //= FIM CREATE ===================================================================
 //================================================================================
-//=== Relatorio de Clientes ======================================================
-async function relatorioClientes() {
+//=== Relatorio de Notas ======================================================
+async function relatorioNotas() {
   try {
     //============================================================================
     // Configuração do documento pdf
@@ -293,12 +292,12 @@ async function relatorioClientes() {
     // doc.text() escreve um texto no documento
     doc.text(`Data: ${dataAtual}`, 160, 15) // (x, y (mm))
     doc.setFontSize(18)
-    doc.text("Relatorio de Cliente", 15, 30)
+    doc.text("Relatorio de Notas", 15, 30)
     doc.setFontSize(12)
     let y = 50 // variavel de apoio
     doc.text("Nome", 14, y)
-    doc.text("Telefone", 85, y)
-    doc.text("E-mail", 130, y)
+    doc.text("Nº da nota", 85, y)
+    doc.text("Valor", 130, y)
     y += 5
     // Desenhar uma linha
     doc.setLineWidth(0.5)
@@ -307,18 +306,18 @@ async function relatorioClientes() {
     //===========================================================================
     // Obter a listagem de clientes (ordem alfabetica)
     //===========================================================================
-    const clientes = await clienteModel.find().sort({ nome: 1 })
+    const notasPen = await notaModel.find().sort({ nota: 1 })
     // Teste de recebimento
     //console.log(clientes)
     // Popular o documento pdf com os clientes cadastrados
-    clientes.forEach((c) => {
+    notasPen.forEach((c) => {
       // Criar uma nova pagina se y > 280mm (A4 = 297mm)
       if (y > 280) {
         doc.addPage()
         y = 20 // Margem de 20mm para iniciar a nova folha
         doc.text("Nome", 14, y)
-        doc.text("Telefone", 85, y)
-        doc.text("E-mail", 130, y)
+        doc.text("Nº da nota", 85, y)
+        doc.text("Valor", 130, y)
         y += 5
         // Desenhar uma linha
         doc.setLineWidth(0.5)
@@ -326,8 +325,8 @@ async function relatorioClientes() {
         y += 10
       }
       doc.text(c.nome, 15, y)
-      doc.text(c.telefone, 85, y)
-      doc.text(c.email, 130, y)
+      doc.text(c.nota, 85, y)
+      doc.text(c.valor, 130, y)
       y += 10
     })
     //============================================================================
@@ -344,7 +343,7 @@ async function relatorioClientes() {
     //============================================================================
     // Definir o caminho do arquivo temporário e nome do arquivo com extenção .pdf
     const tempDir = app.getPath('temp')
-    const filePath = path.join(tempDir, 'empresa.pdf')
+    const filePath = path.join(tempDir, 'nota.pdf')
     // salvar temporariamente o arquivo
     doc.save(filePath)
     // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
@@ -581,31 +580,38 @@ ipcMain.on('create-nota', async (event, newNota) => {
 
 // Buscar Nota ======================================================================
 // Validação da busca
+ipcMain.on('validate-search', () => {
+  dialog.showMessageBox({
+    type: 'warning',
+    title: 'atenção',
+    message: 'Preencher o campo de busca',
+    buttons: ['OK']
+  })
+})
+
 ipcMain.on('search-nota', async (event, cadNota) => {
-  // Teste do recebimento do nome do cliente (Passo 2)
-  console.log(cadNota)
   try {
     // Passos 3 e 4 (Busca dos dados do cliente pelo nome)
     // RegExp (expresão regular 'i' -> insentive (ignorar letra maiuscula ou minuscula))
-    const nota = await notaModel.find({
+    const notas = await notaModel.find({
       nota: new RegExp(cadNota, 'i')
     })
     // teste da busca do cliente pelo nome (Passo 3 e 4)
-    console.log(nota)
+    console.log(cadNota)
     // Melhoria da experiencia do usuario (se não existir um cliente cadastrado enviar uma mensagem)
-    if (nota.length === 0) {
+    if (cadNota.length === 0) {
       // Questionar o usuario.....
       dialog.showMessageBox({
         type: 'warning',
         title: 'Aviso',
-        message: 'Nota não cadastrada. \nDeseja cadastrar esta Nota',
+        message: 'Nota não cadastrada. \nDeseja cadastrar esta nota',
         defaultId: 0,
         buttons: ['Sim', 'Não']
       }).then((result) => {
         // se o botão sim for pressionado
         if (result.response === 0) {
           // Enviar ao pedido para renderer um pedido para recortar e copiar o nome do cliente
-          event.reply('set-nota')
+          event.reply('set-notas')
         } else {
           // Enviar ao renderer um pedido para limpar o campo
           event.reply('reset-form')
@@ -614,7 +620,7 @@ ipcMain.on('search-nota', async (event, cadNota) => {
 
     } else {
       // Enviar ao renderizador (rendererCliente) os dados do cliente (Passo 5) OBS: converter para string
-      event.reply('render-nota', JSON.stringify(nota))
+      event.reply('render-notas', JSON.stringify(notas))
     }
   } catch (error) {
     console.log(error)
@@ -622,11 +628,10 @@ ipcMain.on('search-nota', async (event, cadNota) => {
 })
 //===================================================================================
 
-// Excluir Cliente ==================================================================
-// Recebe o pedido para excluir a nota
+// Excluir Nota ==================================================================
+// Excluir Cliente ================================================================
 ipcMain.on('delete-nota', async (event, id) => {
-  console.log(id) // Teste do passo 2 (importante)
-
+  //console.log(id) // Teste do passo 2 (importante)
   const { response } = await dialog.showMessageBox(win, {
     type: 'warning',
     title: "Atenção!",
@@ -639,35 +644,36 @@ ipcMain.on('delete-nota', async (event, id) => {
       const deleteNota = await notaModel.findByIdAndDelete(id)
 
       // Manda limpar o formulário depois de excluir
-      win.webContents.send('limpar-form')
+      win.webContents.send('reset-form')
 
       // Depois recarrega se precisar
       win.webContents.send('main-reload')
+
     } catch (error) {
       console.log(error);
     }
   }
 })
-// Fim Excluir Cliente ==============================================================
+// Fim Excluir Nota ==============================================================
 
-// Editar Cliente / Update ========================================================
-ipcMain.on('update-nota', async (event, nota) => {
-  console.log(nota) // teste
+// Editar Nota / Update ========================================================
+ipcMain.on('update-nota', async (event, atualizado) => {
+  console.log(atualizado) // teste
   try {
     const updateNota = await notaModel.findByIdAndUpdate(
-      nota.idNota,
+      atualizado.idNot,
       {
-        nome: nota.nomeCad,
-        nota: nota.notaCad,
-        chave: nota.chaveCad,
-        cnpj: nota.cnpjCad,
-        data: nota.dataCad,
-        entrega: nota.entregaCad,
-        pagamento: nota.pagamentoCad,
-        total: nota.totalCad,
-        item: nota.itemCad,
-        quantidade: nota.quantidadeCad,
-        unitario: nota.unitarioCad
+        nome: atualizado.nomeCad,
+        nota: atualizado.notaCad,
+        chave: atualizado.chaveCad,
+        cnpj: atualizado.cnpjCad,
+        data: atualizado.dataCad,
+        entrega: atualizado.entregaCad,
+        pagamento: atualizado.pagamentoCad,
+        total: atualizado.totalCad,
+        item: atualizado.itemCad,
+        quantidade: atualizado.quantidadeCad,
+        unitario: atualizado.unitarioCad
       },
       { new: true }
     )
@@ -699,4 +705,4 @@ ipcMain.on('update-nota', async (event, nota) => {
     }
   }
 })
-// Fim Editar Cliente ===============================================================
+// Fim Editar Nota ===============================================================

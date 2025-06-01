@@ -72,8 +72,10 @@
                     <label class="form-label fw-bold">Forma de Pagamento</label>
                     <select class="form-select" id="inputPagamento">
                         <option value="">Selecione</option>
-                        <option value="credito">Crédito</option>
-                        <option value="debito">Débito</option>
+                        <option value="credito">A VISTA</option>
+                        <option value="debito">CREDITO</option>
+                        <option value="debito">PIX</option>
+                        <option value="debito">PENDENTE</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -133,7 +135,7 @@
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-success" id="btnCreate">ADICIONAR</button>
                 <button type="reset" id="btnLimpar" class="btn btn-warning">LIMPAR</button>
-                <button type="button" class="btn btn-primary" id="btnUpdate">EDITAR</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate" onclick="atualizar()">ATUALIZAR</button>
                 <button type="button" class="btn btn-danger" id="btnDelete" onclick="excluirNota()">EXCLUIR</button>
             </div>
 
