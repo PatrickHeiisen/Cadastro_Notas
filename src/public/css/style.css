@@ -151,6 +151,11 @@ button {
     display: none;
 }
 
+/* Ocultar o id do cliente*/
+#inputIdNota {
+    display: none;
+}
+
 footer p {
     color: #ffffff;
     padding-top: 7px;

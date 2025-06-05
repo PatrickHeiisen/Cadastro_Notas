@@ -87,11 +87,11 @@ document.getElementById("btnLimpar").addEventListener("click", function () {
 //===============================================================================
 
 //= RESET FORM ==================================================================
-function resetForm() {
+function resetNota() {
     location.reload()
 }
-api.resetForm((args) => {
-    resetForm()
+api.resetNota((args) => {
+    resetNota()
 })
 //= FIM RESET FORM ==============================================================
 
@@ -286,13 +286,13 @@ function excluirNota() {
 // Escutar o clique do botão excluir
 btnDelete.addEventListener('click', excluirNota)
 
-api.resetForm(() => {
+/*api.resetForm(() => {
     document.getElementById('formNota').reset()
     arrayNota = [] // zera o array
     btnCreate.disabled = false
     btnUpdate.disabled = true
     btnDelete.disabled = true
-})
+})*/
 // Fim Excluir Nota =============================================================
 
 //= CRUD Update =============================================================

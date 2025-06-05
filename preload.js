@@ -34,5 +34,6 @@ contextBridge.exposeInMainWorld('api', {
     renderNotas: (notas) => ipcRenderer.on('render-notas', notas),
     setNotas: (args) => ipcRenderer.on('set-notas', args),
     deleteNota: (id) => ipcRenderer.send('delete-nota', id),
+    resetNota: (args) => ipcRenderer.on('reset-nota', args),
     updateNota: (notas) => ipcRenderer.send('update-nota', notas)
 })

@@ -472,10 +472,8 @@ ipcMain.on('delete-cli', async (event, id) => {
       const deleteCli = await clienteModel.findByIdAndDelete(id)
 
       // Manda limpar o formulário depois de excluir
-      win.webContents.send('limpar-form')
+      client.webContents.send('reset-form')
 
-      // Depois recarrega se precisar
-      win.webContents.send('main-reload')
 
     } catch (error) {
       console.log(error);
@@ -568,7 +566,7 @@ ipcMain.on('create-nota', async (event, newNota) => {
       buttons: ['OK']
     }).then((result) => {
       if (result.response === 0) {
-        event.reply('reset-form')
+        event.reply('reset-nota')
       }
     })
 
@@ -614,7 +612,7 @@ ipcMain.on('search-nota', async (event, cadNota) => {
           event.reply('set-notas')
         } else {
           // Enviar ao renderer um pedido para limpar o campo
-          event.reply('reset-form')
+          event.reply('reset-nota')
         }
       })
 
@@ -629,25 +627,22 @@ ipcMain.on('search-nota', async (event, cadNota) => {
 //===================================================================================
 
 // Excluir Nota ==================================================================
-// Excluir Cliente ================================================================
 ipcMain.on('delete-nota', async (event, id) => {
   //console.log(id) // Teste do passo 2 (importante)
-  const { response } = await dialog.showMessageBox(win, {
+
+  const { response } = await dialog.showMessageBox(nota, {
     type: 'warning',
     title: "Atenção!",
     message: "Tem certeza que deseja excluir esta nota?\nEsta ação não poderá ser desfeita.",
     buttons: ['Cancelar', 'Excluir'] // [0,1]
-  });
+  })
 
   if (response === 1) {
     try {
       const deleteNota = await notaModel.findByIdAndDelete(id)
 
       // Manda limpar o formulário depois de excluir
-      win.webContents.send('reset-form')
-
-      // Depois recarrega se precisar
-      win.webContents.send('main-reload')
+      nota.webContents.send('reset-nota')
 
     } catch (error) {
       console.log(error);
